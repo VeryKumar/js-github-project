@@ -33,14 +33,16 @@ document.addEventListener("DOMContentLoaded", event => {
       user = event.target.dataset.id;
       fetch(`https://api.github.com/users/${user}/repos`)
         .then(resp => resp.json())
-        .then(parsedSearch => handleAvatarClick(parsedSearch));
+        .then(parsedSearch =>
+          handleAvatarClick(parsedSearch, event.target.dataset.id)
+        );
     }
   };
 
   // Using the results of the search, display information about the users to the page. (You might include showing their username, avatar and a link to their profile.)
   const handleSearch = searchData => {
     //save interesting data=============================
-    console.log(searchData);
+    console.log("handleSearch", searchData);
     users = searchData.items;
     //access interesting data============================
     users.forEach(user => {
@@ -61,6 +63,7 @@ document.addEventListener("DOMContentLoaded", event => {
       nameContainer.innerHTML = name;
       linkContainer.href = link;
       linkContainer.innerText = "Profile";
+      repoContainer.id = `${name}-repo-container`;
       //append everything==========================================
       userList.append(userContainer);
       userContainer.append(
@@ -72,8 +75,9 @@ document.addEventListener("DOMContentLoaded", event => {
     });
   };
 
-  const handleAvatarClick = allRepos => {
+  const handleAvatarClick = (allRepos, id) => {
     allRepos.forEach(repo => {
+      console.log(id);
       //grab interesting data
       name = repo.name;
       url = repo.html_url;
@@ -84,6 +88,7 @@ document.addEventListener("DOMContentLoaded", event => {
       repoLink.href = url;
       repoLink.innerText = name;
       // append
+      repoContainer = document.getElementById(`${id}-repo-container`);
       repoContainer.append(singleRepoContainer);
       singleRepoContainer.append(repoLink);
     });
